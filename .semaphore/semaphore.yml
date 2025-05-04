@@ -1,0 +1,26 @@
+version: v1.0
+name: OpenTofu Deployment
+
+agent:
+  machine:
+    type: e1-standard-2
+    os_image: ubuntu2204
+
+blocks:
+  - name: Deploy Infrastructure
+    task:
+      secrets:
+        - name: opentofu-ssh-key
+      env_vars:
+        - name: TOFU_SSH_KEY
+          value: /home/semaphore/.ssh/opentofu_id
+      jobs:
+        - name: Run OpenTofu Remotely
+          commands:
+            - echo "$TOFU_SSH_KEY" > ~/.ssh/id_rsa
+            - chmod 600 ~/.ssh/id_rsa
+            - ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa tjacobs@192.168.2.34 '
+                cd /opt/xcg-ng-tofu &&
+                tofu init &&
+                tofu apply -auto-approve
+              '
