@@ -1,0 +1,12 @@
+# OpenTofu / Terraform ignores
+*.tfstate
+*.tfstate.*
+.crash
+*.log
+.terraform/
+.terraform.lock.hcl
+
+# Sensitive files
+secrets.tfvars
+*.pem
+*.key
